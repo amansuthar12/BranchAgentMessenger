@@ -73,8 +73,7 @@ fun ThreadsScreen(
                 when (val state = uiState) {
                     is ThreadsUiState.Loading -> {
                         if (!isRefreshing) CircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.Center),
-                            color = BranchTeal
+                            modifier = Modifier.align(Alignment.Center), color = BranchTeal
                         )
                     }
 
@@ -104,8 +103,6 @@ fun ThreadsScreen(
                             ) {
                                 Text("Retry", fontWeight = FontWeight.Bold)
                             }
-
-                            // Debug text
                             Text(
                                 text = "Error: ${state.message}",
                                 style = MaterialTheme.typography.labelSmall,
@@ -124,8 +121,7 @@ fun ThreadsScreen(
                             items(state.threads) { thread ->
                                 ThreadCardItem(
                                     thread = thread,
-                                    onClick = { onThreadSelected(thread.threadId) }
-                                )
+                                    onClick = { onThreadSelected(thread.threadId) })
                             }
                         }
                     }
@@ -146,16 +142,14 @@ fun ThreadCardItem(thread: Thread, onClick: () -> Unit) {
         colors = CardDefaults.cardColors(containerColor = SurfaceWhite)
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically
         ) {
             // Premium Avatar
             Box(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
-                    .background(BranchTeal.copy(alpha = 0.1f)),
-                contentAlignment = Alignment.Center
+                    .background(BranchTeal.copy(alpha = 0.1f)), contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = thread.customerId.take(1).uppercase(),
