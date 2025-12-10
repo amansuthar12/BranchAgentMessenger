@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">BranchAgentMessenger</string>
+    <string name="title_activity_conversation_screen">ConversationScreen</string>
+</resources>
