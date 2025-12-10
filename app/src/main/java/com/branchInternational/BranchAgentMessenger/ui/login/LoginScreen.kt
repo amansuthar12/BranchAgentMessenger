@@ -114,7 +114,7 @@ fun LoginScreen(
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "Hint: Password is email reversed", style = MaterialTheme.typography.labelSmall, color = TextSecondary)
+//                Text(text = "Hint: Password is email reversed", style = MaterialTheme.typography.labelSmall, color = TextSecondary)
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Error State

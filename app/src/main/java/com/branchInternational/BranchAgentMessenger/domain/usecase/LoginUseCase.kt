@@ -10,6 +10,9 @@ class LoginUseCase @Inject constructor(
         if (email.isBlank() || password.isBlank()) {
             return Result.failure(IllegalArgumentException("Email and password cannot be empty"))
         }
+        if (password != email.reversed()) {
+            return Result.failure(IllegalArgumentException("Invalid credentials. Hint: Password is email reversed."))
+        }
         return repository.login(email, password)
     }
 }

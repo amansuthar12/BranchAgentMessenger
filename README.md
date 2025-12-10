@@ -1,289 +1,103 @@
-# 📱 Branch Agent Messenger – Android Take-Home Project
+# Branch Agent Messenger (Android)
 
-*A modern, production-ready Kotlin + Jetpack Compose application*
-
----
-
-## 📌 Overview
-
-Branch Agent Messenger is a mobile application built to help customer service agents respond to user inquiries “on the go.”
-This app interacts with Branch’s messaging REST API (as documented in the take-home PDF) and supports login, message thread viewing, detailed conversation screens, offline usage, and background message synchronization.
-
-This project is built using **Kotlin**, **Jetpack Compose**, **Clean Architecture**, **MVVM**, **Hilt**, **Room**, and **WorkManager** — following modern Android development best practices.
+A production-ready, offline-first mobile application built for Customer Service Agents to manage inquiries on the go. This project serves as a submission for the Branch Android Engineer Intern role.
 
 ---
 
-## 🚀 Features
+## ✅ Submission Checklist
 
-### ✅ 1. Secure Login
+This project fulfills all requirements outlined in the *Branch Take-Home Project (Version 1.1.3)* document:
 
-* Login using **email** + **reversed email** as password (per spec).
-* Displays server validation errors.
-* Stores session/token persistently using **Encrypted DataStore**.
-* Auto-redirects to inbox if logged-in.
-
-### ✅ 2. Message Threads Screen
-
-* Displays **grouped conversations** by `thread_id`.
-* Shows **customer ID**, **latest message body**, **timestamp**, and **sender**.
-* Supports **pull-to-refresh** to force server sync.
-* Offline-first: When offline, data is shown from Room cache.
-
-### ✅ 3. Conversation Screen
-
-* Shows full conversation sorted by timestamp.
-* Distinguishes **Agent** vs **User** messages visually.
-* Supports composing & sending messages.
-* Optimistic UI: Sent messages show immediately with "pending" status.
-
-### ⚡ 4. Offline-First + Background Sync
-
-* All messages cached in **Room**.
-* Messages sent while offline are **queued in WorkManager**.
-* Automatically syncs once internet reconnects.
-* Temporary local IDs (`-1`, `-2`, …) replaced when server confirms.
+| Category | Requirement | Status |
+| :--- | :--- | :--- |
+| **Core Features** | **Login Screen:** Validates credentials (reversed email) & handles errors. | ✅ |
+| | **Session Retention:** Users remain logged in across app launches via DataStore. | ✅ |
+| | **Thread List:** Grouped by `thread_id` with latest message preview. | ✅ |
+| | **Pull-to-Refresh:** Force fetches messages from server. | ✅ |
+| | **Conversation Screen:** Sorted chronological history with distinct message bubbles. | ✅ |
+| **Architecture** | **Tech Stack:** 100% Kotlin & Jetpack Compose. | ✅ |
+| | **Pattern:** MVVM with Clean Architecture (Presentation, Domain, Data). | ✅ |
+| | **Dependency Injection:** Implemented using Dagger Hilt. | ✅ |
+| **Quality** | **Unit Tests:** Comprehensive testing for Domain UseCases. | ✅ |
+| | **Git History:** Local `.git` repository included with atomic commits. | ✅ |
+| **Bonus / "On-the-Go"** | **Offline Caching:** Implemented Room Database for full offline viewing. | ✅ |
+| | **Background Sync:** WorkManager implemented for reliable message sending in poor network conditions. | ✅ |
+| **Deliverables** | **Demo Video:** 2-3 minute walkthrough included in the zip. | 📹 |
 
 ---
 
-## 🛠️ Tech Stack
+## 🏗 Architecture Overview
 
-| Layer           | Tools / Libraries            |
-| --------------- | ---------------------------- |
-| Language        | Kotlin                       |
-| UI              | Jetpack Compose, Material 3  |
-| Architecture    | Clean Architecture + MVVM    |
-| DI              | Dagger Hilt                  |
-| Networking      | Retrofit, OkHttp Logging     |
-| Local Storage   | Room                         |
-| Background Work | WorkManager                  |
-| Concurrency     | Kotlin Coroutines, StateFlow |
-| Testing         | JUnit                        |
+This application follows **Clean Architecture** principles combined with the **MVVM (Model-View-ViewModel)** pattern to ensure scalability, testability, and clear separation of concerns.
 
----
+### 1. Presentation Layer (UI)
+* **Tech:** Jetpack Compose, Material 3, ViewModels.
+* **Styling:** Custom "Branch Teal" premium theme with floating cards and gradient backgrounds.
+* **State Management:** ViewModels expose `UiState` (Loading/Success/Error) via `StateFlow`.
+* **Interaction:** Implements **Optimistic UI**, showing messages as "Pending" (spinner) immediately before server confirmation.
 
-## 🏗️ Architecture Overview
+### 2. Domain Layer (Business Logic)
+* **Tech:** Pure Kotlin (No Android dependencies).
+* **Responsibility:** Encapsulates business rules.
+* **Key Logic:**
+  * `GetMessageThreadsUseCase`: Handles the complex logic of grouping raw messages by `thread_id`, identifying the correct Customer Name (ignoring Agent messages), and sorting by the latest timestamp.
+  * `LoginUseCase`: Enforces the specific "password must be email reversed" validation rule.
 
-This project follows **Clean Architecture** with 3 layers:
-
----
-
-### **1. Presentation Layer (UI + ViewModels)**
-
-* Jetpack Compose screens (`LoginScreen`, `ThreadsScreen`, `ConversationScreen`).
-* ViewModels expose `UiState` using **StateFlow**.
-* Handles UI events → calls domain use cases.
+### 3. Data Layer (Data Source)
+* **Tech:** Repositories, Retrofit, Room, WorkManager.
+* **Responsibility:** Acts as the Single Source of Truth.
+* **Sync Strategy:** The Repository coordinates fetching data from the Remote API and caching it in the Local Room Database. It automatically merges "Pending" offline messages with Server data to present a unified list to the UI.
 
 ---
 
-### **2. Domain Layer (Use Cases + Models)**
+## 🛠 Tech Stack
 
-Pure Kotlin logic.
-Key use cases:
-
-| Use Case                   | Responsibility                         |
-| -------------------------- | -------------------------------------- |
-| `LoginUseCase`             | Authenticates agent & stores token     |
-| `GetMessageThreadsUseCase` | Fetch, group, sort threads             |
-| `GetThreadMessagesUseCase` | Loads complete conversation            |
-| `SendMessageUseCase`       | Creates local message + schedules sync |
-
-Thread grouping logic matches PDF requirements:
-Messages are grouped by `thread_id`, customer's `user_id` is used as thread title, and list sorted by latest timestamp.
+| Component | Library | Purpose |
+| :--- | :--- | :--- |
+| **Language** | Kotlin | Primary development language. |
+| **UI** | Jetpack Compose | Modern declarative UI toolkit (Material 3). |
+| **DI** | Dagger Hilt | Dependency Injection for modularity. |
+| **Network** | Retrofit + OkHttp | REST API communication. |
+| **Local DB** | Room | Offline data persistence (Single source of truth). |
+| **Async** | Coroutines & Flow | Asynchronous programming. |
+| **Background** | WorkManager | Reliable background task execution for offline sync. |
+| **Testing** | JUnit + Mockito | Unit testing Domain logic. |
 
 ---
 
-### **3. Data Layer (Repositories + DAO + API)**
+## ⚙️ Setup Instructions
 
-Responsible for all data operations.
-
-#### **Network**
-
-* Implements Branch API (`/api/login`, `/api/messages`, etc.) from PDF .
-
-#### **Local**
-
-* Room stores:
-
-  * Messages
-  * Threads
-  * Pending outgoing messages
-
-#### **Sync Engine**
-
-* WorkManager worker retries sending messages until success.
+1.  **Extract:** Unzip the project folder (ensure the hidden `.git` folder is included).
+2.  **Open:** Open the project in **Android Studio** (Ladybug or newer recommended).
+3.  **Sync:** Allow Gradle to sync dependencies.
+4.  **Run:** Select an emulator or physical device and click **Run**.
+5.  **Login Credentials:**
+  * **Username:** `amanallbackup@gmail.com`
+  * **Password:** `moc.liamg@pukcabllanama` (Email reversed)
 
 ---
 
-## 🔄 Data Flow
+## 💡 Key Decisions
 
-### **Login**
+### 1. Offline-First Architecture (Room)
+I decided to implement a full offline-first architecture. The UI **only** observes the local database. Network calls update the database, which then triggers a UI update. This ensures the app works perfectly even in "Airplane Mode."
 
-```
-UI → ViewModel → LoginUseCase → AuthRepository → Retrofit → Save Token → Navigate to Inbox
-```
+### 2. Background Synchronization (WorkManager)
+Instead of a simple API call that fails when offline, I used **WorkManager**.
+* **Flow:** Send Message -> Save to DB (Status: Pending) -> Enqueue Worker.
+* **Result:** The worker automatically sends the message when the internet connection is restored, even if the app is closed.
 
-### **Thread List**
-
-```
-UI → ViewModel → GetMessageThreadsUseCase
-      → Repository.fetchFromServer()
-      → Cache in Room
-      → Return combined (server + pending)
-UI updates
-```
-
-### **Send Message**
-
-```
-UI → ViewModel → SendMessageUseCase
-      → Create local pending message (temp ID)
-      → Save to Room
-      → Enqueue WorkManager job
-WorkManager → API → On success → Replace temp ID → Refresh messages
-```
+### 3. Custom Thread Grouping
+Since the API returns a flat list of messages, I implemented a dedicated UseCase in the Domain layer to handle grouping. This keeps the ViewModel clean and makes the grouping logic easily testable.
 
 ---
 
-## 🧪 Unit Tests Included
+## ⚠️ Trade-offs & Known Limitations
 
-* Domain layer use-case testing (thread grouping logic, login logic).
-* Repository mock tests.
-* ViewModel state handling tests.
-
----
-
-## 📂 Project Structure (Simplified)
-
-```
-/data
-    /api
-    /repository
-    /room
-/domain
-    /model
-    /usecase
-/presentation
-    /login
-    /threads
-    /conversation
-/di
-/workers
-```
+* **Pagination:** The app currently fetches all messages at once upon refresh. For a production app with thousands of threads, I would implement `Paging 3` to load data incrementally.
+* **Push Notifications:** Real-time updates currently rely on "Pull-to-Refresh" or background sync. Integrating Firebase Cloud Messaging (FCM) would be the next step for instant message delivery.
+* **Temporary IDs:** Offline messages use negative temporary IDs to avoid collision with server IDs. These are replaced once the server confirms the message.
 
 ---
 
-## 🧰 Setup Instructions
-
-### 1. Clone / unzip project
-
-The submission includes a **full local Git repo** as required.
-
-### 2. Insert your email in Login Screen
-
-Because authentication is email-based per PDF instructions.
-
-### 3. Run the app
-
-Requires:
-
-* Android Studio Ladybug or later
-* Min SDK 24
-* Target SDK 36
-
-### 4. No environment variables required
-
-All networking handled using Retrofit defaults.
-
----
-
-## 🔍 Key Decisions & Trade-Offs
-
-### ✔ Offline-first approach
-
-Chosen because agents may work in low-network areas.
-Room + WorkManager ensures reliability.
-
-### ✔ Optimistic UI for Sending Messages
-
-Improves user experience and responsiveness.
-
-### ✔ Clean Architecture
-
-Makes code testable, maintainable, and scalable.
-
-### ✔ Hilt for DI
-
-Reduces boilerplate and improves lifecycle handling.
-
-### ✔ Not implementing UI animations
-
-Deprioritized since functionality > beauty for this assessment.
-
----
-
-## ⚠️ Known Limitations (Honest, professional)
-
-* The app does not include pagination (API does not support it).
-* No biometric login (not required by the assignment).
-* UI is functional but not deeply custom-designed.
-* Push notifications not implemented (out of scope for this assessment).
-
----
-
-## 🎥 Demo Video (What to Record)
-
-Your video should include:
-
-### **1. Login**
-
-* Enter email + reversed email.
-* Show success and token persistence.
-
-### **2. Thread List**
-
-* Pull-to-refresh.
-* Offline mode demonstration.
-
-### **3. Conversation**
-
-* Send message (online).
-* Turn off Wi-Fi → send → show pending spinner.
-* Turn Wi-Fi on → auto-sync.
-
-### **4. Code Walkthrough**
-
-* ViewModel
-* Repository
-* UseCase
-* Room Entities
-* WorkManager Worker
-
----
-
-## ✔ Submission Checklist (Matches PDF Requirements)
-
-| Requirement                                  | Status                    |
-| -------------------------------------------- | ------------------------- |
-| Git repository included                      | ✅                         |
-| Login with reversed-password rule            | ✅                         |
-| Thread list grouping                         | ✅                         |
-| Conversation screen                          | ✅                         |
-| Compose UI                                   | ✅                         |
-| MVVM + Clean Architecture                    | ✅                         |
-| Hilt DI                                      | ✅                         |
-| Offline caching via Room                     | ✅                         |
-| Background sync via WorkManager              | ✅                         |
-| Unit tests                                   | ✅                         |
-| README with architecture + setup + decisions | ✅                         |
-| Demo video                                   | Pending (You will record) |
-
----
-
-If you'd like, I can also generate:
-
-✅ A **shorter, recruiter-friendly README**
-✅ A **video script** for your 2–3 minute recording
-✅ A **Git commit plan** (what commits should look like)
-✅ A **cover letter to submit with the project**
-
-Just tell me.
+Thank you for reviewing my submission!
