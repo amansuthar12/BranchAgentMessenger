@@ -43,12 +43,10 @@ class ConversationViewModel @Inject constructor(
 
     private fun observeMessageStatus() {
         viewModelScope.launch {
-            // Watch all jobs tagged "sending_message"
             workManager.getWorkInfosByTagFlow("sending_message").collect { workInfoList ->
-                // If ANY message just finished successfully...
                 if (workInfoList.any { it.state == WorkInfo.State.SUCCEEDED }) {
-                    refreshMessages() // Refresh the UI to remove the spinner!
-                    workManager.pruneWork() // Clean up finished jobs so we don't trigger this again unnecessarily
+                    refreshMessages()
+                    workManager.pruneWork()
                 }
             }
         }
@@ -74,7 +72,7 @@ class ConversationViewModel @Inject constructor(
     fun sendMessage() {
         if (replyText.isBlank()) return
 
-        val textToSend = replyText // Save text to a temp variable
+        val textToSend = replyText
 
         viewModelScope.launch {
             try {

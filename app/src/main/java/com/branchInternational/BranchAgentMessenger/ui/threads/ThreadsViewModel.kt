@@ -19,16 +19,10 @@ class ThreadsViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow<ThreadsUiState>(ThreadsUiState.Loading)
     val uiState: StateFlow<ThreadsUiState> = _uiState.asStateFlow()
-
-//    init {
-//        fetchThreads()
-//    }
-
     fun fetchThreads() {
         viewModelScope.launch {
             _uiState.value = ThreadsUiState.Loading
             try {
-                // --- FIX 2: Add parentheses () to call the UseCase ---
                 val threads = getMessageThreadsUseCase()
                 _uiState.value = ThreadsUiState.Success(threads)
             } catch (e: Exception) {

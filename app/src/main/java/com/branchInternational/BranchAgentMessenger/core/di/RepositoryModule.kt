@@ -11,9 +11,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
-
-    // --- DELETED bindAuthRepository (It is already in AuthModule) ---
-
     @Binds
     @Singleton
     abstract fun bindMessageRepository(

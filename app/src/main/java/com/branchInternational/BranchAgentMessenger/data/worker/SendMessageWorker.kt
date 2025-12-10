@@ -13,7 +13,7 @@ import dagger.assisted.AssistedInject
 class SendMessageWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val api: BranchApiService // Injected automatically!
+    private val api: BranchApiService
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {

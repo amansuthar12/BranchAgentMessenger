@@ -48,8 +48,6 @@ class MessageRepositoryImpl @Inject constructor(
 
             // 3. Clear old cache
             dao.clearAllMessages()
-
-            // 4. --- FIX: SMART MERGE ---
             // Only keep a pending message if it is NOT yet in the server list.
             // We check if (ThreadID matches) AND (Body matches).
             val pendingMessagesToKeep = pendingMessages.filter { pending ->
@@ -62,7 +60,7 @@ class MessageRepositoryImpl @Inject constructor(
             val allMessagesToSave = serverEntities + pendingMessagesToKeep
             dao.insertMessages(allMessagesToSave)
 
-            // 5. Return Combined List
+            // 4. Return Combined List
             allMessagesToSave.map { it.toDomain() }
 
         } catch (e: Exception) {
@@ -77,10 +75,6 @@ class MessageRepositoryImpl @Inject constructor(
     }
 
     override suspend fun sendMessage(threadId: Int, body: String): Message {
-        // ... (Keep your existing sendMessage code exactly as it is) ...
-        // ... (It is correct because it inserts the negative ID message) ...
-
-        // --- COPY-PASTE your existing sendMessage logic here ---
         val inputData = workDataOf("thread_id" to threadId, "body" to body)
         val constraints =
             Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
@@ -88,7 +82,7 @@ class MessageRepositoryImpl @Inject constructor(
             .setInputData(inputData)
             .setConstraints(constraints)
             .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10, TimeUnit.SECONDS)
-            .addTag("sending_message") // <--- ADD THIS LINE
+            .addTag("sending_message")
             .build()
         WorkManager.getInstance(context).enqueue(sendRequest)
 

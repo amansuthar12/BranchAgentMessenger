@@ -15,17 +15,13 @@ class GetMessageThreadsUseCase @Inject constructor(
                 // 1. Get the latest message (for the preview text & time)
                 val latest = messages.maxByOrNull { it.timestamp } ?: messages.first()
 
-                // --- FIX: ALWAYS FIND THE REAL CUSTOMER ID ---
-                // We look for a message where 'agentId' is NULL (meaning it came from the customer).
-                // This ensures the thread is named "User 1092" even if "User Me" spoke last.
                 val customerMessage = messages.firstOrNull { it.agentId == null }
 
-                // Fallback: If for some reason there are NO customer messages, use the first available ID.
                 val threadTitleId = customerMessage?.userId ?: messages.first().userId
 
                 Thread(
                     threadId = threadId,
-                    customerId = threadTitleId, // <--- Use the fixed ID here
+                    customerId = threadTitleId,
                     latestMessageBody = latest.body,
                     latestMessageTimestamp = latest.timestamp
                 )

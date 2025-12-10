@@ -10,7 +10,8 @@ import javax.inject.Singleton
 class TokenManager @Inject constructor(
     @ApplicationContext context: Context
 ) {
-    private val prefs: SharedPreferences = context.getSharedPreferences("branch_prefs", Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences =
+        context.getSharedPreferences("branch_prefs", Context.MODE_PRIVATE)
 
     fun saveToken(token: String) {
         prefs.edit().putString("auth_token", token).apply()

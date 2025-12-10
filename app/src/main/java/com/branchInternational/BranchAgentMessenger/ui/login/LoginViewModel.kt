@@ -20,7 +20,6 @@ class LoginViewModel @Inject constructor(
     var isLoading by mutableStateOf(false)
     var errorMsg by mutableStateOf<String?>(null)
 
-    // Helper: According to requirements, password is email reversed
     fun autoFillPassword() {
         if (email.isNotEmpty()) {
             password = email.reversed()

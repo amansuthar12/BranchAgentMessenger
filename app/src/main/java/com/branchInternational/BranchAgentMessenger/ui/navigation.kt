@@ -9,17 +9,15 @@ import com.branchInternational.BranchAgentMessenger.ui.threads.ThreadsScreen
 import com.branchInternational.BranchAgentMessenger.ui.conversation.ConversationScreen
 
 @Composable
-fun AppNavGraph(startDestination: String = "login") { // 1. Add startDestination parameter
+fun AppNavGraph(startDestination: String = "login") {
     val navController = rememberNavController()
 
-    // 2. Use the passed startDestination
     NavHost(navController = navController, startDestination = startDestination) {
 
         composable("login") {
             LoginScreen(
                 onLoginSuccess = {
                     navController.navigate("threads") {
-                        // 3. This clears the back stack so 'Back' exits the app instead of returning to Login
                         popUpTo("login") { inclusive = true }
                     }
                 }

@@ -12,12 +12,10 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var tokenManager: TokenManager // Inject the Token Manager
+    lateinit var tokenManager: TokenManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // logic: If token exists, start at "threads". Otherwise "login".
         val startDestination = if (tokenManager.getToken() != null) "threads" else "login"
 
         setContent {

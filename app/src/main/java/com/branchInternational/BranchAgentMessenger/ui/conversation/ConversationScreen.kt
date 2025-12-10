@@ -38,7 +38,6 @@ fun ConversationScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    // Auto-Refresh
     androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) viewModel.refreshMessages()
@@ -56,7 +55,7 @@ fun ConversationScreen(
     }
 
     Scaffold(
-        containerColor = BranchBackground, // Premium Background
+        containerColor = BranchBackground,
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
@@ -99,7 +98,6 @@ fun PremiumChatBubble(message: Message) {
     val isMe = message.agentId != null
     val alignment = if (isMe) Alignment.End else Alignment.Start
 
-    // Custom Bubble Shapes
     val shape = if (isMe) {
         RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp, bottomStart = 20.dp, bottomEnd = 4.dp)
     } else {
@@ -110,7 +108,6 @@ fun PremiumChatBubble(message: Message) {
     val textColor = if (isMe) Color.White else TextPrimary
 
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = alignment) {
-        // Shadow Bubble
         Surface(
             color = bubbleColor,
             shape = shape,
@@ -126,7 +123,6 @@ fun PremiumChatBubble(message: Message) {
             }
         }
 
-        // Timestamp + Status below bubble
         Spacer(modifier = Modifier.height(4.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
@@ -135,7 +131,6 @@ fun PremiumChatBubble(message: Message) {
                 color = TextSecondary,
                 fontSize = 11.sp
             )
-            // Pending Status Spinner
             if (message.id < 0) {
                 Spacer(modifier = Modifier.width(4.dp))
                 CircularProgressIndicator(modifier = Modifier.size(10.dp), strokeWidth = 2.dp, color = BranchTeal)
@@ -153,7 +148,6 @@ fun PremiumInputBar(value: String, onValueChange: (String) -> Unit, onSend: () -
             .fillMaxWidth(),
         verticalAlignment = Alignment.Bottom
     ) {
-        // Pill Input
         TextField(
             value = value,
             onValueChange = onValueChange,
@@ -174,7 +168,6 @@ fun PremiumInputBar(value: String, onValueChange: (String) -> Unit, onSend: () -
 
         Spacer(modifier = Modifier.width(12.dp))
 
-        // FAB Style Send Button
         FloatingActionButton(
             onClick = onSend,
             containerColor = BranchTeal,

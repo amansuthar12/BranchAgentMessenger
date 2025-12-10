@@ -22,7 +22,6 @@ object DateUtils {
             val date = apiFormat.parse(timestamp) ?: return timestamp
 
             // Logic: If the message is from today, show Time. Otherwise, show Date.
-            // For this assignment, since data is from 2017, we mostly default to Date format.
             dateFormat.format(date)
         } catch (e: Exception) {
             timestamp // Fallback to raw string if parsing fails

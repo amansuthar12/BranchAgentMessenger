@@ -32,7 +32,6 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
-    // 1. Premium Gradient Background
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -43,7 +42,6 @@ fun LoginScreen(
             ),
         contentAlignment = Alignment.Center
     ) {
-        // 2. Floating Card
         Card(
             modifier = Modifier
                 .fillMaxWidth(0.9f)

@@ -19,9 +19,7 @@ object DatabaseModule {
     @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            "branch_messenger_db"
+            context, AppDatabase::class.java, "branch_messenger_db"
         ).build()
     }
 

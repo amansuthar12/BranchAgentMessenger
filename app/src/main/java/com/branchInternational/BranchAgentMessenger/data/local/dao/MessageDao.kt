@@ -10,7 +10,6 @@ import com.branchInternational.BranchAgentMessenger.data.local.entity.MessageEnt
 interface MessageDao {
     @Query("SELECT * FROM messages")
     suspend fun getAllMessages(): List<MessageEntity>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMessages(messages: List<MessageEntity>)
 
